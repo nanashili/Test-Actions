@@ -1,0 +1,15 @@
+name: Test Action
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+  - name: Read package.json
+    id: package
+    uses: juliangruber/read-file-action@v1
+    with:
+      path: ./nightly.json
+  - name: Echo nightly.json
+    run: echo "${{ steps.package.outputs.content }}"
