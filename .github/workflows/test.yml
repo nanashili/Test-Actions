@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
         
       - uses: juliangruber/read-file-action@v1
         id: package
@@ -21,4 +21,4 @@ jobs:
         with:
           name: "nightly.json"
           json: '{"versionCode":"250", "versionName":"2.5.0", "sha256sum": "${{ fromJson(steps.package.outputs.content).sha256sum }}", "url": "https:"}'
-      - run: git config --global user.email "nanashili@plexus.dev" && git config --global user.name "Nanashi Li" && git add . && git add --force nightly.json && git status && git commit -a -m "Update AuroraEditor `latest.json`." && git push
+      - run: echo '{"versionCode":"250", "versionName":"2.5.0", "sha256sum":"${{ fromJson(steps.package.outputs.content).sha256sum }}", "url":"https:"}'
