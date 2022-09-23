@@ -1,15 +1,21 @@
-name: Test Action
+name: CI
 on:
   push:
-    branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-  - name: Read package.json
-    id: package
-    uses: juliangruber/read-file-action@v1
-    with:
-      path: ./nightly.json
-  - name: Echo nightly.json
-    run: echo "${{ steps.package.outputs.content }}"
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - uses: juliangruber/read-file-action@v1
+        id: package
+        with:
+          path: ./nightly.json
+      - name: Echo file sha256
+        run: echo "${{ fromJson(steps.package.outputs.content).sha256sum }}"
