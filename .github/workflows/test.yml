@@ -7,9 +7,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        
       - uses: juliangruber/read-file-action@v1
         id: package
         with:
-          path: ./nightly.json
+          path: ./test.json
       - name: Echo file sha256
         run: echo "${{ fromJson(steps.package.outputs.content).sha256sum }}"
+        
+      - name: Create latest.json File
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "latest.json"
+          json: '{"versionCode":"250", "versionName":"2.5.0", "sha256sum": "${{ fromJson(steps.package.outputs.content).sha256sum }}", "url": "https:"}'
+      - run: git config --global user.email "nanashili@plexus.dev" && git config --global user.name "Nanashi Li" && git add . && git add --force latest.json && git status && git commit -a -m "Update AuroraEditor `latest.json`." && git push
